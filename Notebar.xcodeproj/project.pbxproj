@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A905235B300CEE4C0076CFA6 /* NotebarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A905235A300CEE4C0076CFA6 /* NotebarApp.swift */; };
-		C803A1EF25CF941200366CEB /* MbSwiftUIFirstResponder in Frameworks */ = {isa = PBXBuildFile; productRef = C803A1EE25CF941200366CEB /* MbSwiftUIFirstResponder */; };
 		C803A1F225CF98DF00366CEB /* TextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803A1F125CF98DF00366CEB /* TextManager.swift */; };
 		C82C210725C60B3D00CCCDF7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82C210625C60B3D00CCCDF7 /* HeaderView.swift */; };
 		C82C211025C62D8100CCCDF7 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82C210F25C62D8100CCCDF7 /* Colors.xcassets */; };
@@ -39,7 +38,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C803A1EF25CF941200366CEB /* MbSwiftUIFirstResponder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,7 +111,6 @@
 			);
 			name = Notebar;
 			packageProductDependencies = (
-				C803A1EE25CF941200366CEB /* MbSwiftUIFirstResponder */,
 			);
 			productName = Notebar;
 			productReference = C836C55525A0171500BEB83F /* Notebar.app */;
@@ -125,8 +122,9 @@
 		C836C54D25A0171500BEB83F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1220;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					C836C55425A0171500BEB83F = {
 						CreatedOnToolsVersion = 12.2;
@@ -143,7 +141,6 @@
 			);
 			mainGroup = C836C54C25A0171500BEB83F;
 			packageReferences = (
-				C803A1ED25CF941200366CEB /* XCRemoteSwiftPackageReference "MbSwiftUIFirstResponder" */,
 			);
 			productRefGroup = C836C55625A0171500BEB83F /* Products */;
 			projectDirPath = "";
@@ -218,9 +215,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 3CQQ5583P7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -240,6 +240,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -279,9 +280,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 3CQQ5583P7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -294,6 +298,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -307,8 +312,8 @@
 				CODE_SIGN_ENTITLEMENTS = Notebar/Notebar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Notebar/Preview Content\"";
-				DEVELOPMENT_TEAM = 3CQQ5583P7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Notebar/Info.plist;
@@ -332,8 +337,8 @@
 				CODE_SIGN_ENTITLEMENTS = Notebar/Notebar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Notebar/Preview Content\"";
-				DEVELOPMENT_TEAM = 3CQQ5583P7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Notebar/Info.plist;
@@ -371,25 +376,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		C803A1ED25CF941200366CEB /* XCRemoteSwiftPackageReference "MbSwiftUIFirstResponder" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Mobilinked/MbSwiftUIFirstResponder";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		C803A1EE25CF941200366CEB /* MbSwiftUIFirstResponder */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C803A1ED25CF941200366CEB /* XCRemoteSwiftPackageReference "MbSwiftUIFirstResponder" */;
-			productName = MbSwiftUIFirstResponder;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C836C54D25A0171500BEB83F /* Project object */;
 }
