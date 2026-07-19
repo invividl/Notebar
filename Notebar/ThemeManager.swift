@@ -2,51 +2,51 @@
 //  ThemeManager.swift
 //  Notebar
 //
-//  Created by Jay Stakelon on 1/31/21.
-//
 
-import Foundation
 import SwiftUI
+import Observation
 
 enum Theme: String {
-    case system = "system"
-    case light = "light"
-    case dark = "dark"
+    case system
+    case light
+    case dark
 }
 
-class ThemeManager: ObservableObject {
-    @Published var isThemeEditor: Bool = false
-    @Published var currentTheme: Theme {
+/// Tracks the current theme and the derived text/background colors, and
+/// persists the chosen theme to UserDefaults. Uses the @Observable macro
+/// (macOS 14+).
+@Observable
+class ThemeManager {
+    var isThemeEditor: Bool = false
+    var currentTheme: Theme {
         didSet {
             UserDefaults.standard.set(currentTheme.rawValue, forKey: "theme")
         }
     }
-    @Published var bgColor = Color(.textBackgroundColor)
-    @Published var textColor = Color(.textColor )
-    
+    var bgColor = Color(.textBackgroundColor)
+    var textColor = Color(.textColor)
+
     init() {
-        var theme: Theme
-        if let data = UserDefaults.standard.object(forKey: "theme") as? String {
-            theme = Theme(rawValue: data) ?? Theme.system
-        } else {
-            theme = Theme.system
-        }
-        self.currentTheme = theme
-        setTextColor(self.currentTheme)
-        setBgColor(self.currentTheme)
+        let saved = UserDefaults.standard.string(forKey: "theme")
+        currentTheme = saved.flatMap(Theme.init(rawValue:)) ?? .system
+        setTextColor(currentTheme)
+        setBgColor(currentTheme)
     }
-    
+
     func showThemeEditor() {
-        self.isThemeEditor = true
+        isThemeEditor = true
     }
+
     func hideThemeEditor() {
-        self.isThemeEditor = false
+        isThemeEditor = false
     }
+
     func setTheme(_ t: Theme) {
         currentTheme = t
         setTextColor(t)
         setBgColor(t)
     }
+
     func setTextColor(_ t: Theme) {
         switch t {
         case .dark:
@@ -57,6 +57,7 @@ class ThemeManager: ObservableObject {
             textColor = Color(.textColor)
         }
     }
+
     func setBgColor(_ t: Theme) {
         switch t {
         case .dark:
@@ -68,4 +69,3 @@ class ThemeManager: ObservableObject {
         }
     }
 }
-

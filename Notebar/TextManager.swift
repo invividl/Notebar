@@ -2,25 +2,22 @@
 //  TextManager.swift
 //  Notebar
 //
-//  Created by Jay Stakelon on 2/6/21.
-//
 
 import SwiftUI
+import Observation
 
-class TextManager: ObservableObject {
-    @Published var text: String {
+/// Holds the note text and persists it to UserDefaults automatically.
+/// Uses the @Observable macro (macOS 14+) instead of the older
+/// ObservableObject / @Published pattern.
+@Observable
+class TextManager {
+    var text: String {
         didSet {
             UserDefaults.standard.set(text, forKey: "text")
         }
     }
-    
+
     init() {
-        var text: String
-        if let data = UserDefaults.standard.object(forKey: "text") as? String {
-            text = data
-        } else {
-            text = ""
-        }
-        self.text = text
+        text = UserDefaults.standard.string(forKey: "text") ?? ""
     }
 }

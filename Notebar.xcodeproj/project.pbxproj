@@ -3,37 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A905235B300CEE4C0076CFA6 /* NotebarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A905235A300CEE4C0076CFA6 /* NotebarApp.swift */; };
 		C803A1EF25CF941200366CEB /* MbSwiftUIFirstResponder in Frameworks */ = {isa = PBXBuildFile; productRef = C803A1EE25CF941200366CEB /* MbSwiftUIFirstResponder */; };
 		C803A1F225CF98DF00366CEB /* TextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803A1F125CF98DF00366CEB /* TextManager.swift */; };
 		C82C210725C60B3D00CCCDF7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82C210625C60B3D00CCCDF7 /* HeaderView.swift */; };
-		C82C210A25C60B5E00CCCDF7 /* DropdownMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82C210925C60B5E00CCCDF7 /* DropdownMenuView.swift */; };
 		C82C211025C62D8100CCCDF7 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82C210F25C62D8100CCCDF7 /* Colors.xcassets */; };
 		C82C211625C7717E00CCCDF7 /* ThemeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82C211525C7717E00CCCDF7 /* ThemeEditorView.swift */; };
 		C82C211925C771CA00CCCDF7 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82C211825C771CA00CCCDF7 /* ThemeManager.swift */; };
-		C836C55925A0171500BEB83F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C836C55825A0171500BEB83F /* AppDelegate.swift */; };
 		C836C55B25A0171500BEB83F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C836C55A25A0171500BEB83F /* ContentView.swift */; };
 		C836C55D25A0171600BEB83F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C836C55C25A0171600BEB83F /* Assets.xcassets */; };
 		C836C56025A0171600BEB83F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C836C55F25A0171600BEB83F /* Preview Assets.xcassets */; };
-		C836C56325A0171600BEB83F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C836C56125A0171600BEB83F /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A905235A300CEE4C0076CFA6 /* NotebarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebarApp.swift; sourceTree = "<group>"; };
 		C803A1F125CF98DF00366CEB /* TextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextManager.swift; sourceTree = "<group>"; };
 		C82C210625C60B3D00CCCDF7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		C82C210925C60B5E00CCCDF7 /* DropdownMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownMenuView.swift; sourceTree = "<group>"; };
 		C82C210F25C62D8100CCCDF7 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		C82C211525C7717E00CCCDF7 /* ThemeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeEditorView.swift; sourceTree = "<group>"; };
 		C82C211825C771CA00CCCDF7 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		C836C55525A0171500BEB83F /* Notebar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notebar.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C836C55825A0171500BEB83F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C836C55A25A0171500BEB83F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C836C55C25A0171600BEB83F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C836C55F25A0171600BEB83F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		C836C56225A0171600BEB83F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C836C56425A0171600BEB83F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C836C56525A0171600BEB83F /* Notebar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notebar.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -54,7 +50,6 @@
 			isa = PBXGroup;
 			children = (
 				C836C55A25A0171500BEB83F /* ContentView.swift */,
-				C82C210925C60B5E00CCCDF7 /* DropdownMenuView.swift */,
 				C82C210625C60B3D00CCCDF7 /* HeaderView.swift */,
 				C82C211525C7717E00CCCDF7 /* ThemeEditorView.swift */,
 			);
@@ -80,16 +75,15 @@
 		C836C55725A0171500BEB83F /* Notebar */ = {
 			isa = PBXGroup;
 			children = (
-				C836C55825A0171500BEB83F /* AppDelegate.swift */,
 				C803A1F125CF98DF00366CEB /* TextManager.swift */,
 				C82C211825C771CA00CCCDF7 /* ThemeManager.swift */,
 				C82C211225C63CA800CCCDF7 /* Views */,
 				C836C55C25A0171600BEB83F /* Assets.xcassets */,
 				C82C210F25C62D8100CCCDF7 /* Colors.xcassets */,
-				C836C56125A0171600BEB83F /* Main.storyboard */,
 				C836C56425A0171600BEB83F /* Info.plist */,
 				C836C56525A0171600BEB83F /* Notebar.entitlements */,
 				C836C55E25A0171600BEB83F /* Preview Content */,
+				A905235A300CEE4C0076CFA6 /* NotebarApp.swift */,
 			);
 			path = Notebar;
 			sourceTree = "<group>";
@@ -165,7 +159,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C836C56325A0171600BEB83F /* Main.storyboard in Resources */,
 				C82C211025C62D8100CCCDF7 /* Colors.xcassets in Resources */,
 				C836C56025A0171600BEB83F /* Preview Assets.xcassets in Resources */,
 				C836C55D25A0171600BEB83F /* Assets.xcassets in Resources */,
@@ -182,25 +175,13 @@
 				C836C55B25A0171500BEB83F /* ContentView.swift in Sources */,
 				C82C210725C60B3D00CCCDF7 /* HeaderView.swift in Sources */,
 				C82C211625C7717E00CCCDF7 /* ThemeEditorView.swift in Sources */,
-				C82C210A25C60B5E00CCCDF7 /* DropdownMenuView.swift in Sources */,
-				C836C55925A0171500BEB83F /* AppDelegate.swift in Sources */,
 				C82C211925C771CA00CCCDF7 /* ThemeManager.swift in Sources */,
 				C803A1F225CF98DF00366CEB /* TextManager.swift in Sources */,
+				A905235B300CEE4C0076CFA6 /* NotebarApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		C836C56125A0171600BEB83F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C836C56225A0171600BEB83F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		C836C56625A0171600BEB83F /* Debug */ = {
@@ -327,7 +308,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Notebar/Preview Content\"";
-				DEVELOPMENT_TEAM = F725AN38JF;
+				DEVELOPMENT_TEAM = 3CQQ5583P7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Notebar/Info.plist;
@@ -335,7 +316,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = "1.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stakelon.Notebar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -352,7 +333,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Notebar/Preview Content\"";
-				DEVELOPMENT_TEAM = F725AN38JF;
+				DEVELOPMENT_TEAM = 3CQQ5583P7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Notebar/Info.plist;
@@ -360,7 +341,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = "1.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stakelon.Notebar;
 				PRODUCT_NAME = "$(TARGET_NAME)";

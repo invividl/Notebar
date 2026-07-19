@@ -2,76 +2,70 @@
 //  ContentView.swift
 //  Notebar
 //
-//  Created by Jay Stakelon on 1/1/21.
-//
 
 import SwiftUI
-import MbSwiftUIFirstResponder
-
-extension NSTextView {
-    open override var frame: CGRect {
-        didSet {
-            backgroundColor = .clear //<<here clear
-            drawsBackground = true
-        }
-    }
-}
-
-enum FirstResponders: Int {
-    case textEditor
-}
 
 struct ContentView: View {
-    private var placeholder: String = "hello there"
-    @State var firstResponder: FirstResponders? = FirstResponders.textEditor
-    @ObservedObject var themeManager = ThemeManager()
-    @ObservedObject var textManager = TextManager()
-    
+    private let placeholder = "hello there"
+
+    @State private var themeManager = ThemeManager()
+    @State private var textManager = TextManager()
+
+    // Native SwiftUI focus (macOS 12+). Replaces the old
+    // MbSwiftUIFirstResponder dependency. Driving focus this way lets the
+    // system route keystrokes (including Space and Return) into the editor.
+    @FocusState private var isEditorFocused: Bool
+
     var body: some View {
+        // A local bindable reference so we can pass a text binding to TextEditor.
+        @Bindable var textManager = textManager
+
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                HeaderView(themeManager: themeManager)
+                HeaderView()
                 ZStack(alignment: .topLeading) {
                     TextEditor(text: $textManager.text)
-                        .firstResponder(id: FirstResponders.textEditor, firstResponder: $firstResponder)
-                        .font(Font.system(.body, design: .monospaced))
+                        .focused($isEditorFocused)
+                        .font(.system(.body, design: .monospaced))
+                        .foregroundStyle(themeManager.textColor)
+                        .scrollContentBackground(.hidden)
+                        .tint(.yellow)
                         .padding(.leading, -5)
-                        .foregroundColor(themeManager.textColor)
-                    if (textManager.text == "") {
+                    if textManager.text.isEmpty {
                         Text(placeholder)
-                            .font(Font.system(.body, design: .monospaced))
-                            .foregroundColor(themeManager.textColor)
+                            .font(.system(.body, design: .monospaced))
+                            .foregroundStyle(themeManager.textColor)
                             .opacity(0.4)
+                            .allowsHitTesting(false)
                     }
-                }.accentColor(.yellow)
+                }
                 .padding(12)
                 .background(themeManager.bgColor)
             }
+
+            // Theme editor overlay. Currently hidden (isThemeEditor stays
+            // false) — the dimming layer only intercepts taps while shown.
             ZStack {
-//                if themeManager.isThemeEditor {
-                    Color(.shadowColor)
-                        .opacity(themeManager.isThemeEditor ? 0.5 : 0)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .onTapGesture {
-                            themeManager.hideThemeEditor()
-                            firstResponder = FirstResponders.textEditor
-                        }
-                        .animation(.easeOut(duration: 0.25))
-                    ThemeEditorView(themeManager: themeManager)
-                        .frame(width: 240, height: 240)
-                        .offset(y: themeManager.isThemeEditor ? 0 : 400)
-                        .animation(.easeOut(duration: 0.25))
-//                }
-                
+                Color(.shadowColor)
+                    .opacity(themeManager.isThemeEditor ? 0.5 : 0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .allowsHitTesting(themeManager.isThemeEditor)
+                    .onTapGesture {
+                        themeManager.hideThemeEditor()
+                        isEditorFocused = true
+                    }
+                ThemeEditorView(themeManager: themeManager)
+                    .frame(width: 240, height: 240)
+                    .offset(y: themeManager.isThemeEditor ? 0 : 400)
             }
+            .animation(.easeOut(duration: 0.25), value: themeManager.isThemeEditor)
         }
+        .frame(width: 436, height: 400)
         .background(Color(.windowBackgroundColor))
+        .onAppear { isEditorFocused = true }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }
-

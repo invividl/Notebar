@@ -2,23 +2,36 @@
 //  HeaderView.swift
 //  Notebar
 //
-//  Created by Jay Stakelon on 1/30/21.
-//
 
 import SwiftUI
+import AppKit
 
 struct HeaderView: View {
-    @ObservedObject var themeManager: ThemeManager
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text("Notebar").font(Font.system(size: 12, weight: .bold, design: .rounded))
+                Text("Notebar")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
                 Spacer()
-                DropdownMenuView(themeManager: themeManager).frame(width: 24, height: 24)
+                // Native SwiftUI menu, replacing the old NSPopUpButton wrapper.
+                Menu {
+                    Button("Quit Notebar") {
+                        NSApplication.shared.terminate(nil)
+                    }
+                    .keyboardShortcut("q")
+                } label: {
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .menuIndicator(.hidden)
+                .fixedSize()
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, 8)
             .padding(.horizontal, 12)
-            Divider().background(Color.gray.opacity(0.1))
-        }.background(Color(.windowBackgroundColor))
+            Divider()
+        }
+        .background(Color(.windowBackgroundColor))
     }
 }
