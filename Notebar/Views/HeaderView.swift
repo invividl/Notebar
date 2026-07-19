@@ -28,7 +28,7 @@ struct HeaderView: View {
                 .menuIndicator(.hidden)
                 .fixedSize()
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, 10)
             .padding(.horizontal, 12)
             Divider()
         }
