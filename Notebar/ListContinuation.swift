@@ -9,14 +9,19 @@ import Foundation
 /// the start of each line (how lightweight Markdown editors handle lists), so
 /// the document stays a plain `String`.
 ///
+/// Items are laid out on a 4-column grid: an item's *content* always starts on
+/// a tab stop, with the marker hanging in the columns before it. So a
+/// top-level bullet reads `  - hello` (content at column 4) and lines up with a
+/// once-tab-indented plain line. This relies on the editor's monospaced font.
+///
 /// - Return continues the current list item, or clears an empty one.
-/// - Tab / Shift+Tab nests / un-nests the current item.
-/// - Typing `* ` converts the marker to a bullet glyph: `•` at the top level,
-///   `◦` when nested. `-` is kept literally at every level.
+/// - Tab / Shift+Tab nest / un-nest a list item, or soft-tab a plain line.
+/// - Typing `* ` or `- ` snaps the marker onto the grid; `* ` also becomes a
+///   bullet glyph (`•` at the top level, `◦` when nested). `-` stays literal.
 enum ListContinuation {
 
-    /// One level of nesting.
-    static let indentUnit = "    " // 4 spaces
+    /// Width of one indent level / tab stop, in columns.
+    static let tabWidth = 4
 
     /// Filled circle used for top-level circle bullets.
     static let circleBullet = "•"
@@ -43,12 +48,105 @@ enum ListContinuation {
             return (newText, text.distance(from: text.startIndex, to: lineStart))
         } else {
             // Continue the list on a new line, at the same nesting level.
-            let insertion = "\n" + item.indent + item.nextMarker + " "
+            let insertion = "\n" + alignedPrefix(level: item.level, marker: item.continuationMarker)
             var newText = text
             newText.insert(contentsOf: insertion, at: caret)
             let caretOffset = text.distance(from: text.startIndex, to: caret) + insertion.count
             return (newText, caretOffset)
         }
+    }
+
+    // MARK: - Tab / Shift+Tab
+
+    /// Nests (`outdent == false`) or un-nests (`outdent == true`) the current
+    /// list item by one level, keeping its content on the tab-stop grid. On a
+    /// plain (non-list) line it inserts or removes a 4-column soft tab instead.
+    ///
+    /// - Returns: `nil` when there's nothing to do (e.g. un-nesting a top-level
+    ///   item, or a plain line with no leading spaces to remove).
+    static func handleIndent(in text: String, caret: String.Index, outdent: Bool) -> (text: String, caretOffset: Int)? {
+        let (lineStart, lineEnd) = lineBounds(in: text, around: caret)
+
+        guard let item = parse(line: text[lineStart..<lineEnd]) else {
+            return softTab(in: text, caret: caret, lineStart: lineStart, outdent: outdent)
+        }
+
+        let newLevel = outdent ? item.level - 1 : item.level + 1
+        guard newLevel >= 0 else { return nil }
+
+        let newMarker = item.marker(atLevel: newLevel)
+        let newPrefix = alignedPrefix(level: newLevel, marker: newMarker)
+        let newLine = newPrefix + item.content
+
+        var newText = text
+        newText.replaceSubrange(lineStart..<lineEnd, with: newLine)
+
+        // Everything on the line shifts by the change in prefix length.
+        let lineStartOffset = text.distance(from: text.startIndex, to: lineStart)
+        let caretWithinLine = text.distance(from: lineStart, to: caret)
+        let shifted = caretWithinLine + (newPrefix.count - item.prefixLength)
+        let clamped = min(max(shifted, 0), newLine.count)
+        return (newText, lineStartOffset + clamped)
+    }
+
+    /// Inserts or removes a soft tab on a plain line so its text sits on the
+    /// same 4-column grid as list content.
+    private static func softTab(in text: String, caret: String.Index, lineStart: String.Index, outdent: Bool) -> (text: String, caretOffset: Int)? {
+        let column = text.distance(from: lineStart, to: caret)
+        let caretOffset = text.distance(from: text.startIndex, to: caret)
+
+        if outdent {
+            // Remove the spaces back to the previous tab stop (up to tabWidth).
+            let target = column == 0 ? 0 : ((column - 1) / tabWidth) * tabWidth
+            var removeStart = caret
+            var removed = 0
+            while removed < (column - target),
+                  removeStart > lineStart,
+                  text[text.index(before: removeStart)] == " " {
+                removeStart = text.index(before: removeStart)
+                removed += 1
+            }
+            guard removed > 0 else { return nil }
+            var newText = text
+            newText.removeSubrange(removeStart..<caret)
+            return (newText, caretOffset - removed)
+        } else {
+            // Advance to the next tab stop.
+            let spaces = tabWidth - (column % tabWidth)
+            var newText = text
+            newText.insert(contentsOf: String(repeating: " ", count: spaces), at: caret)
+            return (newText, caretOffset + spaces)
+        }
+    }
+
+    // MARK: - Marker conversion
+
+    /// When the caret sits right after a lone leading `*` or `-`, snaps the
+    /// marker onto the tab-stop grid (adding the space the user just typed).
+    /// `*` also becomes a bullet glyph appropriate for the nesting level.
+    ///
+    /// - Returns: `nil` when the line isn't `<indent>*` or `<indent>-`, so the
+    ///   caller lets the editor insert a normal space.
+    static func convertMarkerBeforeSpace(in text: String, caret: String.Index) -> (text: String, caretOffset: Int)? {
+        let (lineStart, _) = lineBounds(in: text, around: caret)
+        let typed = text[lineStart..<caret]
+        let indent = typed.prefix { $0 == " " || $0 == "\t" }
+        let rest = typed[indent.endIndex...]
+        guard rest == "*" || rest == "-" else { return nil }
+
+        let level = indent.count / tabWidth
+        let marker: String
+        if rest == "*" {
+            marker = level == 0 ? circleBullet : whiteCircle
+        } else {
+            marker = "-"
+        }
+        let newPrefix = alignedPrefix(level: level, marker: marker)
+
+        var newText = text
+        newText.replaceSubrange(lineStart..<caret, with: newPrefix)
+        let caretOffset = text.distance(from: text.startIndex, to: lineStart) + newPrefix.count
+        return (newText, caretOffset)
     }
 
     // MARK: - Backspace
@@ -75,65 +173,15 @@ enum ListContinuation {
         return lineStart..<prefixEnd
     }
 
-    // MARK: - Tab / Shift+Tab
+    // MARK: - Layout
 
-    /// Nests (`outdent == false`) or un-nests (`outdent == true`) the current
-    /// list item by one level, updating circle-bullet glyphs for the new depth.
-    ///
-    /// - Returns: `nil` when the current line isn't a list item, or when
-    ///   un-nesting a line that has no indentation to remove.
-    static func handleIndent(in text: String, caret: String.Index, outdent: Bool) -> (text: String, caretOffset: Int)? {
-        let (lineStart, lineEnd) = lineBounds(in: text, around: caret)
-        guard let item = parse(line: text[lineStart..<lineEnd]) else { return nil }
-
-        let newIndent: String
-        if outdent {
-            guard item.indent.count >= indentUnit.count else { return nil }
-            newIndent = String(item.indent.dropLast(indentUnit.count))
-        } else {
-            newIndent = String(item.indent) + indentUnit
-        }
-
-        let newLevel = newIndent.count / indentUnit.count
-        let newMarker = item.marker(atLevel: newLevel)
-        let newLine = newIndent + newMarker + " " + item.content
-
-        var newText = text
-        newText.replaceSubrange(lineStart..<lineEnd, with: newLine)
-
-        // Everything on the line shifts by the change in prefix length.
-        let oldPrefixLength = item.indent.count + item.markerText.count + 1
-        let newPrefixLength = newIndent.count + newMarker.count + 1
-        let lineStartOffset = text.distance(from: text.startIndex, to: lineStart)
-        let caretWithinLine = text.distance(from: lineStart, to: caret)
-        let shifted = caretWithinLine + (newPrefixLength - oldPrefixLength)
-        let clamped = min(max(shifted, 0), newLine.count)
-        return (newText, lineStartOffset + clamped)
-    }
-
-    // MARK: - Marker conversion
-
-    /// When the caret sits right after a lone leading `*`, converts it to a
-    /// bullet glyph appropriate for the nesting level and appends the space the
-    /// user just typed.
-    ///
-    /// - Returns: `nil` when the line isn't `<indent>*`, so the caller lets the
-    ///   editor insert a normal space.
-    static func convertMarkerBeforeSpace(in text: String, caret: String.Index) -> (text: String, caretOffset: Int)? {
-        let (lineStart, _) = lineBounds(in: text, around: caret)
-        let typed = text[lineStart..<caret]
-        let indent = typed.prefix { $0 == " " || $0 == "\t" }
-        guard String(typed[indent.endIndex...]) == "*" else { return nil }
-
-        let level = indent.count / indentUnit.count
-        let glyph = level <= 0 ? circleBullet : whiteCircle
-
-        let starStart = text.index(before: caret)
-        var newText = text
-        newText.replaceSubrange(starStart..<caret, with: glyph + " ")
-        // Replaced one character ("*") with two (glyph + space).
-        let caretOffset = text.distance(from: text.startIndex, to: caret) + 1
-        return (newText, caretOffset)
+    /// The prefix (padding + marker + space) that places an item's content on
+    /// the tab stop for `level`.
+    private static func alignedPrefix(level: Int, marker: String) -> String {
+        let markerAndSpace = marker + " "
+        let column = tabWidth * (level + 1)
+        let padding = max(0, column - markerAndSpace.count)
+        return String(repeating: " ", count: padding) + markerAndSpace
     }
 
     // MARK: - Parsing
@@ -159,9 +207,15 @@ enum ListContinuation {
             content.trimmingCharacters(in: .whitespaces).isEmpty
         }
 
-        /// Number of leading characters (indent + marker + space).
+        /// Number of leading characters (indent + marker + space); also the
+        /// column at which the content starts.
         var prefixLength: Int {
             indent.count + markerText.count + 1
+        }
+
+        /// The nesting level, derived from where the content sits on the grid.
+        var level: Int {
+            max(0, (prefixLength + tabWidth / 2) / tabWidth - 1)
         }
 
         /// The marker to use at a given nesting level.
@@ -177,12 +231,12 @@ enum ListContinuation {
         }
 
         /// The marker for a continuation line at the current level.
-        var nextMarker: String {
+        var continuationMarker: String {
             switch family {
             case .dash:
                 return "-"
             case .circle:
-                return marker(atLevel: indent.count / indentUnit.count)
+                return marker(atLevel: level)
             case .ordered:
                 return "\((orderedNumber ?? 0) + 1)\(orderedPunct ?? ".")"
             }
